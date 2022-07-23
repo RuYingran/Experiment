@@ -25,3 +25,8 @@ f函数为2*x+1,不断计算f函数结果产生环从而产生碰撞。
 ![image](https://user-images.githubusercontent.com/109326479/180592886-1ba3f06c-be1d-4b9c-9ac0-a149acc5a701.png)
 ### 24bit
 ![image](https://user-images.githubusercontent.com/109326479/180592983-e85c953a-7746-4f30-8911-bd3e995d788b.png)
+# sm3_length_extension_attack
+## 实验原理
+对mes1+padding+mes2进行hash计算hash_value1,后对mes1进行hash，将得到的值作为IV对mes2+padding+length进行hash计算hash_value2,得到的hash值相同则代表可实现长度扩展攻击。  
+## 实验结果
+![image](https://user-images.githubusercontent.com/109326479/180593319-8a4847fe-1cba-4079-8c8d-88df3ae3a676.png)
