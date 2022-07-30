@@ -146,7 +146,7 @@ static void sm3_compress(uint32_t digest[sm3_block_BYTES / sizeof(uint32_t)], co
 	uint32_t E = digest[4], F = digest[5], G = digest[6], H = digest[7];
 
 	uint32_t SS1, SS2, TT1, TT2, T[64];
-	for (j = 0; j < 4; j++)
+	for (j = 0; j < 4; j++)  //循环展开，每次计算值都是相互独立的，可提前计算
 	{
 		//W[j] = byte_swap32(pblock[j]);
 		W[j] = byte_swap32(pblock[j]);
@@ -154,7 +154,7 @@ static void sm3_compress(uint32_t digest[sm3_block_BYTES / sizeof(uint32_t)], co
 		W[j+8] = byte_swap32(pblock[j + 8]);
 		W[j+12] = byte_swap32(pblock[j + 12]);
 	}
-	for (j = 0; j < 13; j++)
+	for (j = 0; j < 13; j++) //循环展开，每次计算值都是相互独立的，可提前计算
 	{
 		//W[j] = P1(W[j - 16] ^ W[j - 9] ^ rol(W[j - 3], 15)) ^ rol(W[j - 13], 7) ^ W[j - 6];
 		W[j+16] = P1(W[j] ^ W[j +7] ^ rol(W[j +13], 15)) ^ rol(W[j +3], 7) ^ W[j +10];
@@ -162,7 +162,7 @@ static void sm3_compress(uint32_t digest[sm3_block_BYTES / sizeof(uint32_t)], co
 		W[j+42] = P1(W[j + 26] ^ W[j + 33] ^ rol(W[j + 39], 15)) ^ rol(W[j + 29], 7) ^ W[j + 36];
 		W[j+55] = P1(W[j + 39] ^ W[j + 46] ^ rol(W[j + 52], 15)) ^ rol(W[j + 42], 7) ^ W[j + 49];
 	}
-	for (j = 0; j < 16; j++)
+	for (j = 0; j < 16; j++) //循环展开，每次计算值都是相互独立的，可提前计算
 	{
 		W1[j] = W[j] ^ W[j + 4];
 		W1[j+16] = W[j+16] ^ W[j + 20];
@@ -203,7 +203,7 @@ static void sm3_compress(uint32_t digest[sm3_block_BYTES / sizeof(uint32_t)], co
 	}
 	*/
 	j = 0;
-	FULL_UNROLL_8(A, B, C, D, E, F, G, H, 0);   //基于GMSSL开源代码
+	FULL_UNROLL_8(A, B, C, D, E, F, G, H, 0);   //基于GMSSL开源代码，多个变量迭代处理，利用宏定义加速
 	FULL_UNROLL_8(A, B, C, D, E, F, G, H, 0);
 	FULL_UNROLL_8(A, B, C, D, E, F, G, H, 1);
 	FULL_UNROLL_8(A, B, C, D, E, F, G, H, 1);
