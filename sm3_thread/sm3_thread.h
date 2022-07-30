@@ -85,9 +85,9 @@ void func_swap32(int j1, uint32_t i1, int j2, uint32_t i2, uint32_t* W)
 	tmp2 += (i2 >> 24);
 	W[j2] = tmp2;
 }
-void func_1(int j1, int j2, int j3, int j4, int j5, int j6, uint32_t* W)
+void func_1(int j1, int j2, int j3, int j4, int j5, int j6, uint32_t* W)  //多线程函数，一次处理6个计算值，剩余未计算的量4个一次处理
 {
-	if (j1 && j2 && j3 && j4 && j5 && j6 != 0)
+	if (j1 && j2 && j3 && j4 && j5 && j6 != 0)   
 	{
 		W[j1] = P1(W[j1 - 16] ^ W[j1 - 9] ^ rol(W[j1 - 3], 15)) ^ rol(W[j1 - 13], 7) ^ W[j1 - 6];
 		W[j2] = P1(W[j2 - 16] ^ W[j2 - 9] ^ rol(W[j2 - 3], 15)) ^ rol(W[j2 - 13], 7) ^ W[j2 - 6];
@@ -104,7 +104,7 @@ void func_1(int j1, int j2, int j3, int j4, int j5, int j6, uint32_t* W)
 		W[j4] = P1(W[j4 - 16] ^ W[j4 - 9] ^ rol(W[j4 - 3], 15)) ^ rol(W[j4 - 13], 7) ^ W[j4 - 6];
 	}
 }
-void func_2(int j1, int j2, int j3, int j4, int j5, int j6, int j7, int j8, uint32_t* W1, uint32_t* W)
+void func_2(int j1, int j2, int j3, int j4, int j5, int j6, int j7, int j8, uint32_t* W1, uint32_t* W)  //多线程函数，一次处理8个
 {
 	W1[j1] = W[j1] ^ W[j1 + 4];
 	W1[j2] = W[j2] ^ W[j2 + 4];
@@ -191,31 +191,31 @@ static void sm3_compress(uint32_t digest[sm3_block_BYTES / sizeof(uint32_t)], co
 	uint32_t E = digest[4], F = digest[5], G = digest[6], H = digest[7];
 
 	uint32_t SS1, SS2, TT1, TT2, T[64];
-	std::vector<std::thread> threads1, threads2, threads3; //�洢�̺߳����ı���,���ö��̼߳���ѭ��
+	std::vector<std::thread> threads1, threads2, threads3; //存储线程函数的变量,利用多线程加速循环
 	//for (j = 0; j < 16; j++) W[j] = byte_swap32(pblock[j]);
 	for (int j = 0; j < 8; j++)
 	{
-		threads1.push_back(std::thread(func_swap32, j, pblock[j], j + 8, pblock[j + 8], W));
+		threads1.push_back(std::thread(func_swap32, j, pblock[j], j + 8, pblock[j + 8], W));//多线程加速
 	}
 	for (auto& thread : threads1) {
-		thread.join();	//ִ���̱߳����е�ÿ���߳�ִ�к���
+		thread.join();	//执行线程变量中的每个线程执行函数
 	}
 	//for (j = 16; j < 68; j++) W[j] = P1(W[j - 16] ^ W[j - 9] ^ rol(W[j - 3], 15)) ^ rol(W[j - 13], 7) ^ W[j - 6];
 	for (int j = 0; j < 8; j++)
 	{
-		threads2.push_back(std::thread(func_1, j + 16, j + 24, j + 32, j + 40, j + 48, j + 56, W));
+		threads2.push_back(std::thread(func_1, j + 16, j + 24, j + 32, j + 40, j + 48, j + 56, W));//多线程加速
 	}
 	threads2.push_back(std::thread(func_1, 64, 65, 66, 67, 0, 0, W));
 	for (auto& thread : threads2) {
-		thread.join();	//ִ���̱߳����е�ÿ���߳�ִ�к���
+		thread.join();	//执行线程变量中的每个线程执行函数
 	}
 	//for (j = 0; j < 64; j++) W1[j] = W[j] ^ W[j + 4];
 	for (int j = 0; j < 8; j++)
 	{
-		threads3.push_back(std::thread(func_2, j, j + 8, j + 16, j + 24,j+32,j+40,j+48,j+56,W1, W));
+		threads3.push_back(std::thread(func_2, j, j + 8, j + 16, j + 24,j+32,j+40,j+48,j+56,W1, W));//多线程加速
 	}
 	for (auto& thread : threads3) {
-		thread.join();	//ִ���̱߳����е�ÿ���߳�ִ�к���
+		thread.join();	//执行线程变量中的每个线程执行函数
 	}
 	/*for (j = 0; j < 16; j++)
 	{
