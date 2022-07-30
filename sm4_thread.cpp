@@ -5,7 +5,7 @@
 #include<windows.h>
 using namespace std;
 
-const int N = 1024; //加密次数
+const int N = 10; //加密次数
 string BinToHex(string str) {//二进制转换为十六进制的函数实现
 	string hex = "";
 	int temp = 0;
