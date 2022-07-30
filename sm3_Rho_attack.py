@@ -105,6 +105,7 @@ def sm3(mes):
     return res_[2:]
 
 def Rho_attack(n):
+    '''f函数为2*x+1,不断计算f函数结果产生环从而产生碰撞。'''
     h=random.randint(0,pow(2,64))
     h_=[]
     for i in range(0,pow(2,32)):
