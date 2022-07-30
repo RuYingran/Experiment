@@ -170,7 +170,7 @@ void Key_Extension_31(string& K)
 	}
 }
 
-void Encode_Round(string& rk, string& pln)//rk是轮密钥，应该是;pln是这次要加密的32位字
+void Encode_Round(string& rk, string& pln)//rk是轮密钥;pln是这次要加密的32位字
 {
 	string cipher[32] = { pln.substr(0,8),pln.substr(8,8),pln.substr(16,8),pln.substr(24) };
 	string cip = "";
