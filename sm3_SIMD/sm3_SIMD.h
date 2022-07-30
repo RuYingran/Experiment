@@ -14,7 +14,7 @@ using namespace std;
 #define FF1(x,y,z)(x&y) | x&z | (y&z)
 #define GG1(x,y,z)(x&y) | ((~x)&z)
 
-#define FULL_UNROLL(A,B,C,D,E,F,G,H,x)       \
+#define FULL_UNROLL(A,B,C,D,E,F,G,H,x)       \                //Âü∫‰∫éGMSSLÂºÄÊ∫ê‰ª£Á†Å
     if(j<16) T_[j]=0x79CC4519;else T_[j]= 0x7AB79D8A;\
     SS1 = rol((rol(A, 12) + E + rol(T[j],j)), 7);\
 	SS2 = SS1 ^ rol(A, 12);                  \
@@ -146,8 +146,8 @@ static void sm3_compress(uint32_t digest[sm3_block_BYTES / sizeof(uint32_t)], co
 	int j;
 	uint32_t W[68],W1[64];
 	__m128i X, Y, R,Q,Z;
-	__m128i M = _mm_setr_epi32(0, 0, 0, 0xffffffff);//∞¥∑¥œÚÀ≥–Ú…Ë÷√4∏ˆ¥¯∑˚∫≈µƒ32Œª’˚ ˝÷µ
-	__m128i V = _mm_setr_epi8(3, 2, 1, 0, 7, 6, 5, 4, 11, 10, 9, 8, 15, 14, 13, 12);//∑¥œÚÀ≥–Ú…Ë÷√16∏ˆ¥¯∑˚∫≈µƒ8Œª’˚ ˝÷µ
+	__m128i M = _mm_setr_epi32(0, 0, 0, 0xffffffff);//ÊåâÂèçÂêëÈ°∫Â∫èËÆæÁΩÆ4‰∏™Â∏¶Á¨¶Âè∑ÁöÑ32‰ΩçÊï¥Êï∞ÂÄº
+	__m128i V = _mm_setr_epi8(3, 2, 1, 0, 7, 6, 5, 4, 11, 10, 9, 8, 15, 14, 13, 12);//ÂèçÂêëÈ°∫Â∫èËÆæÁΩÆ16‰∏™Â∏¶Á¨¶Âè∑ÁöÑ8‰ΩçÊï¥Êï∞ÂÄº
 	//const uint32_t* pblock = (const uint32_t*)(block);
 
 	uint32_t A = digest[0], B = digest[1], C = digest[2], D = digest[3];
@@ -156,13 +156,13 @@ static void sm3_compress(uint32_t digest[sm3_block_BYTES / sizeof(uint32_t)], co
 	uint32_t SS1, SS2, TT1, TT2, T[64];
 	//for (j = 0; j < 16; j++) W[j] = byte_swap32(pblock[j]);
 	for (j = 0; j < 16; j += 4) {
-		X = _mm_loadu_si128((__m128i*)(block + j * 4)); //√ø¥Œ¥¶¿Ì4∏ˆ£¨Ω´ ˝æ›◊™ªªŒ™128bit≤¢¥Ê»ÎW ˝◊È÷–
+		X = _mm_loadu_si128((__m128i*)(block + j * 4)); //ÊØèÊ¨°Â§ÑÁêÜ4‰∏™ÔºåÂ∞ÜÊï∞ÊçÆËΩ¨Êç¢‰∏∫128bitÂπ∂Â≠òÂÖ•WÊï∞ÁªÑ‰∏≠
 		X = _mm_shuffle_epi8(X, V);
 		_mm_storeu_si128((__m128i*)(W + j), X);
 	}
 	//for (j = 16; j < 68; j++) W[j] = P1(W[j - 16] ^ W[j - 9] ^ rol(W[j - 3], 15)) ^ rol(W[j - 13], 7) ^ W[j - 6];
 	for (j = 16; j < 68; j += 4) {
-		X = _mm_loadu_si128((__m128i*)(W + j - 3));   //X = (W[j - 3], W[j - 2], W[j - 1], 0) 
+		X = _mm_loadu_si128((__m128i*)(W + j - 3));   //X = (W[j - 3], W[j - 2], W[j - 1], 0)   //Âü∫‰∫éGMSSLÂºÄÊ∫ê‰ª£Á†Å
 		X = _mm_andnot_si128(M, X);
 
 		X = _mm_rotl_epi32(X, 15);
@@ -171,7 +171,7 @@ static void sm3_compress(uint32_t digest[sm3_block_BYTES / sizeof(uint32_t)], co
 		Y = _mm_loadu_si128((__m128i*)(W + j - 16));
 		X = _mm_xor_si128(X, Y);
 
-		Y = _mm_rotl_epi32(X, (23 - 15));  //º∆À„P1(x) (x^rol(x,15)^rol(x,23))
+		Y = _mm_rotl_epi32(X, (23 - 15));  //ËÆ°ÁÆóP1(x) (x^rol(x,15)^rol(x,23))
 		Y = _mm_xor_si128(Y, X);
 		Y = _mm_rotl_epi32(Y, 15);
 		X = _mm_xor_si128(X, Y);
@@ -196,7 +196,7 @@ static void sm3_compress(uint32_t digest[sm3_block_BYTES / sizeof(uint32_t)], co
 	//for (j = 0; j < 64; j+=4) W1[j] = W[j] ^ W[j + 4];
 	for (j = 0; j < 64; j+=4)
 	{
-		Q = _mm_loadu_si128((__m128i*)(W + j)); //W ˝◊È÷– ˝æ›“—÷™£¨√ø¥Œ4∏ˆ≤¢––º∆À„W1[j] ˝◊È÷–µƒ÷µ¥”∂¯Ã·…˝ÀŸ∂»
+		Q = _mm_loadu_si128((__m128i*)(W + j)); //WÊï∞ÁªÑ‰∏≠Êï∞ÊçÆÂ∑≤Áü•ÔºåÊØèÊ¨°4‰∏™Âπ∂Ë°åËÆ°ÁÆóW1[j]Êï∞ÁªÑ‰∏≠ÁöÑÂÄº‰ªéËÄåÊèêÂçáÈÄüÂ∫¶
 		Z = _mm_loadu_si128((__m128i*)(W + j+4));
 		Z = _mm_xor_si128(Q, Z);
 		_mm_storeu_si128((__m128i*)(W1 + j), Z);
