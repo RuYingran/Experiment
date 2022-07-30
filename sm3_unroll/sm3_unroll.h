@@ -24,7 +24,7 @@ SS1 = rol((rol(A, 12) + E + rol(T[j],j)), 7);\
 	D = P0(TT2);                             \
 	j++
 
-#define FULL_UNROLL_8(A, B, C, D, E, F, G, H, x)\
+#define FULL_UNROLL_8(A, B, C, D, E, F, G, H, x)\          //基于GMSSL开源代码
 	FULL_UNROLL(A, B, C, D, E, F, G, H, x);		\
 	FULL_UNROLL(H, A, B, C, D, E, F, G, x);		\
 	FULL_UNROLL(G, H, A, B, C, D, E, F, x);		\
@@ -203,7 +203,7 @@ static void sm3_compress(uint32_t digest[sm3_block_BYTES / sizeof(uint32_t)], co
 	}
 	*/
 	j = 0;
-	FULL_UNROLL_8(A, B, C, D, E, F, G, H, 0);
+	FULL_UNROLL_8(A, B, C, D, E, F, G, H, 0);   //基于GMSSL开源代码
 	FULL_UNROLL_8(A, B, C, D, E, F, G, H, 0);
 	FULL_UNROLL_8(A, B, C, D, E, F, G, H, 1);
 	FULL_UNROLL_8(A, B, C, D, E, F, G, H, 1);
